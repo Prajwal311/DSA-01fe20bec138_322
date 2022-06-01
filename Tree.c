@@ -1,42 +1,93 @@
-#include <stdio.h>
+#include<stdio.h>
 #include<stdlib.h>
-
-struct node
-{
-    int data;
-    struct node *left, *right;
+struct node{
+int value;
+struct node *lc,*rc;
 };
-struct node* create();
+typedef struct node *Node;
 
- int main()
+Node new_node(int value)
 {
-    struct node *root;
-    root = create();
+    Node temp=(Node*)malloc(sizeof(struct node));
+    temp->value=value;
+    temp->lc=NULL;
+    temp->rc=NULL;
+    return temp;
+}
+Node insert_node(Node root ,int value)
+{
+    if (root==NULL)
+    {
+        return new_node(value);
+    }
+    if(value<root->value)
+    {
+        root->lc = insert_node(root->lc,value);
+    }
+    else if(value>root->value)
+    {
+        root->rc=insert_node(root->rc,value);
+    }
+    return root;
+}
+void print(Node root)
+{
+    if(root!=NULL)
+    {
+        print(root->lc);
+        printf("%d\t",root->value);
+        print(root->rc);
+    }
+}
+Node search(Node root,int data) {
+    int n;
+    Node cur;
+    cur=root;
+    printf("Enter the data to search\n");
+    scanf("%d",&n);
+    while(cur!=NULL)
+    {
+        if(n>cur->value)
+        {
+        cur=cur->rc;
+        if(n==cur->value)
+        {
+            printf("Found\n");
+            exit(0);
+        }
+        }
+        else if(n<cur->value)
+        {
+            cur=cur->lc;
+            if(n==cur->value)
+        {
+            printf("Found\n");
+            exit(0);
+        }
+        }
+    }
 }
 
-struct node *create()
+void main()
 {
-    struct node *temp;
-    int data;
-    int choice;
-    temp = (struct node *)malloc(sizeof(struct node));
-    printf("Press 0 to exit");
-    printf("\nPress 1 for new node");
-    printf("Enter your choice : ");
-    scanf("%d", &choice);
-    if (choice == 0)
+    Node root=NULL;
+   int n,x,key;
+    while(1)
     {
-        return 0;
-    }
-    else
-    {
-        printf("Enter the data:");
-        scanf("%d", &data);
-        temp->data = data;
-        printf("Enter the left child of %d\t", data);
-        temp->left = create();
-        printf("Enter the right child of %d\t", data);
-        temp->right = create();
-        return temp;
+        printf("Enter the choice:1.Insert 2.Display 3.Search 4.Exit\n");
+        scanf("%d",&n);
+        switch(n)
+        {
+            case 1:scanf("%d",&x);
+                root=insert_node(root,x);
+            break;
+            case 2:print(root);
+            break;
+            case 3:printf("Enter the key to search: \n");
+            scanf("%d",&key);
+                search(root,key);
+            break;
+            case 4:exit(0);
+        }
     }
 }
